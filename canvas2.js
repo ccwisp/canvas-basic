@@ -1,17 +1,18 @@
 const canvas = document.querySelector('canvas');
 
-const HEIGHT = window.innerHeight;
 const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
 
 const GRAVITY = 1;
-const FRICTION = 0.91;
+const FRICTION = 0.88;
 
-canvas.height = HEIGHT;
 canvas.width = WIDTH;
+canvas.height = HEIGHT;
 
 const ctx = canvas.getContext('2d');
 
 const circles = [];
+
 const colors = ['#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
 
 class Circle {
@@ -24,44 +25,39 @@ class Circle {
     this.color = colors[Math.floor(Math.random() * colors.length)];
   }
 
-  draw() {
+  draw = () => {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
     ctx.fill();
-    ctx.stroke();
-  }
+  };
 
-  update() {
-    if (this.x + this.radius > WIDTH || this.x - this.radius < 0)
-      this.dx *= -1 * FRICTION;
-
+  update = () => {
+    if (this.x + this.radius > WIDTH || this.x - this.radius < 0) this.dx *= -1;
     if (this.y + this.radius + this.dy > HEIGHT || this.y - this.radius < 0) {
       this.dy *= -1 * FRICTION;
-      this.dx *= -1 * FRICTION * 0.9;
     } else {
       this.dy += GRAVITY;
     }
 
     this.y += this.dy;
-    this.x += this.dx;
 
     this.draw();
-  }
+  };
 }
 
-for (let i = 0; i < 300; i++) {
-  const radius = Math.random() * 30 + 2;
-  const dx = Math.random() - 0.5;
-  const dy = Math.random() - 0.5;
-  const y = Math.random() * (HEIGHT - 300 - 2 * radius) + radius;
+for (let i = 0; i < 500; i++) {
+  const radius = Math.random() * 20 + 5;
   const x = Math.random() * (WIDTH - 2 * radius) + radius;
+  const y = Math.random() * (HEIGHT - 2 * radius) + radius;
+  const dx = Math.random() * 4;
+  const dy = Math.random() * 4;
   circles.push(new Circle(x, y, dx, dy, radius));
 }
 
 animate = () => {
   requestAnimationFrame(animate);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, WIDTH, HEIGHT);
   circles.forEach((c) => c.update());
 };
 
